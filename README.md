@@ -1,4 +1,4 @@
-# Paint Board Demo
+# 彩虹画笔
 
 GitHub 开源项目 Paint Board 的功能讲解视频源码
 
@@ -9,6 +9,3 @@ GitHub 开源项目 Paint Board 的功能讲解视频源码
 + **Paint Board 仓库**: [https://github.com/LHRUN/paint-board](https://github.com/LHRUN/paint-board)
 + **Paint Board 链接**: [https://songlh.top/paint-board/](https://songlh.top/paint-board/)
 
-## 分支
-
-+ 彩虹画笔: rainbow
