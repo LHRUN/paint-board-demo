@@ -1,0 +1,15 @@
+.main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 30px;
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  color: #66CC89;
+}

@@ -1,0 +1,6 @@
+.paint-board {
+  border: solid 2px #66CC89;
+  width: 500px;
+  height: 500px;
+  box-sizing: border-box;
+}
