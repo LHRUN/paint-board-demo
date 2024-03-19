@@ -1,6 +1,6 @@
 # Paint Board Demo
 
-GitHub 开源项目 Paint Board 的功能讲解视频源码
+GitHub 开源项目 Paint Board 创意画笔实现源码
 
 <div align="center" style="width: 100%;">
   <img style="width: 100%" src="https://raw.githubusercontent.com/LHRUN/file-store/main/paint-board/preview_device.png" alt="preview"/>
