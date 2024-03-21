@@ -12,3 +12,4 @@ GitHub 开源项目 Paint Board 创意画笔实现源码
 ## 分支
 
 + 彩虹画笔: rainbow
++ 多形状画笔: shape
