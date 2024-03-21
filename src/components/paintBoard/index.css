@@ -1,6 +1,13 @@
+.btns {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .paint-board {
   border: solid 2px #66CC89;
-  width: 500px;
-  height: 500px;
+  width: 700px;
+  height: 700px;
   box-sizing: border-box;
 }
