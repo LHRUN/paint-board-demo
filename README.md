@@ -15,3 +15,4 @@ GitHub 开源项目 Paint Board 创意画笔实现源码
 + 多形状画笔: shape
 + 素材画笔: material
 + 像素画笔: pixels
++ 多色画笔: multiColor
