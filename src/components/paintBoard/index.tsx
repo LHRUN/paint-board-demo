@@ -2,13 +2,22 @@ import { useEffect, useRef, useState, MouseEvent } from 'react'
 import './index.css'
 
 let isMouseDown = false
-let movePoint: { x: number, y: number } | null = null
+let moveDate = 0
+const drawWidth = 15
+const step = 5
 
 const getMousePoint = (x: number, y: number) => {
   return {
     x: x - (window.innerWidth - 500) / 2,
     y: y - (window.innerHeight - 500) / 2
   }
+}
+
+const getRandomColor = () => {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgba(${r}, ${g}, ${b}, 1)`
 }
 
 function PaintBoard() {
@@ -19,10 +28,6 @@ function PaintBoard() {
     if (canvasRef?.current) {
       const context2D = canvasRef?.current.getContext('2d')
       if (context2D) {
-        context2D.lineCap = 'round'
-        context2D.lineJoin = 'round'
-        context2D.lineWidth = 10
-        
         setContext2D(context2D)
       }
     }
@@ -39,16 +44,28 @@ function PaintBoard() {
     if (!canvasRef?.current || !context2D) {
       return
     }
+
+    const now = new Date().getTime()
+    if (now - moveDate < 30) {
+      return
+    }
+    moveDate = now
+
     if (isMouseDown) {
       const { clientX, clientY } = event
       const point = getMousePoint(clientX, clientY)
-      if (movePoint) {
-        context2D.beginPath()
-        context2D.moveTo(movePoint.x, movePoint.y)
-        context2D.lineTo(point.x, point.y)
-        context2D.stroke()
+      
+      for (let i = -drawWidth; i < drawWidth; i += step) {
+        for (let j = -drawWidth; j < drawWidth; j += step) {
+          if (Math.random() > 0.5) {
+            context2D.save();
+            context2D.fillStyle = getRandomColor();
+            context2D.fillRect(point.x + i, point.y + j, step, step);
+            context2D.fill();
+            context2D.restore();
+          }
+        }
       }
-      movePoint = point
     }
   }
 
@@ -57,7 +74,6 @@ function PaintBoard() {
       return
     }
     isMouseDown = false
-    movePoint = null
   }
 
   return (
