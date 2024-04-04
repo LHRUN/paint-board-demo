@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, MouseEvent } from 'react'
 import './index.css'
 
+interface Point {
+  x: number
+  y: number
+}
+
 let isMouseDown = false
-let movePoint: { x: number, y: number } | null = null
+let movePoints: Point[] = []
 
 const getMousePoint = (x: number, y: number) => {
   return {
@@ -21,7 +26,7 @@ function PaintBoard() {
       if (context2D) {
         context2D.lineCap = 'round'
         context2D.lineJoin = 'round'
-        context2D.lineWidth = 10
+        context2D.lineWidth = 3
         
         setContext2D(context2D)
       }
@@ -42,13 +47,29 @@ function PaintBoard() {
     if (isMouseDown) {
       const { clientX, clientY } = event
       const point = getMousePoint(clientX, clientY)
-      if (movePoint) {
+      const length = movePoints.length
+      if (length) {
         context2D.beginPath()
-        context2D.moveTo(movePoint.x, movePoint.y)
+        context2D.moveTo(movePoints[length - 1].x, movePoints[length - 1].y)
         context2D.lineTo(point.x, point.y)
         context2D.stroke()
+        if (length % 5 === 0) {
+          for (
+            let i = movePoints.length - 5, count = 0;
+            i >= 0 && count < 3;
+            i = i - 5, count++
+          ) {
+            context2D.save()
+            context2D.beginPath()
+            context2D.lineWidth = 1
+            context2D.moveTo(movePoints[length - 1].x, movePoints[length - 1].y)
+            context2D.lineTo(movePoints[i].x, movePoints[i].y)
+            context2D.stroke()
+            context2D.restore()
+          }
+        }
       }
-      movePoint = point
+      movePoints.push(point)
     }
   }
 
@@ -57,7 +78,7 @@ function PaintBoard() {
       return
     }
     isMouseDown = false
-    movePoint = null
+    movePoints = []
   }
 
   return (
