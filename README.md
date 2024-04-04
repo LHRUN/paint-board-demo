@@ -18,3 +18,4 @@ GitHub 开源项目 Paint Board 创意画笔实现源码
 + 多色画笔: multiColor
 + 文字画笔: text
 + 多线连接: multiLine
++ 网状画笔: reticulate
