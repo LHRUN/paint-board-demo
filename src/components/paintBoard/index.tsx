@@ -11,22 +11,52 @@ const getMousePoint = (x: number, y: number) => {
   }
 }
 
+const materialImage = new Promise<HTMLImageElement>((resolve) => {
+  const image = new Image()
+  image.src = '/crayon.png'
+  image.onload = () => {
+    resolve(image)
+  }
+})
+
+const getPattern = async (color: string) => {
+  const canvas = document.createElement('canvas')
+  const context = canvas.getContext('2d') as CanvasRenderingContext2D
+  canvas.width = 100
+  canvas.height = 100
+  context.fillStyle = color
+  context.fillRect(0, 0, 100, 100)
+  const image = await materialImage
+  if (image) {
+    context.drawImage(image, 0, 0, 100, 100)
+  }
+  return context.createPattern(canvas, 'repeat')
+}
+
 function PaintBoard() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [context2D, setContext2D] = useState<CanvasRenderingContext2D | null>(null)
 
   useEffect(() => {
+    initDraw()
+  }, [canvasRef])
+
+  const initDraw = async () => {
     if (canvasRef?.current) {
       const context2D = canvasRef?.current.getContext('2d')
       if (context2D) {
         context2D.lineCap = 'round'
         context2D.lineJoin = 'round'
         context2D.lineWidth = 10
+        const pattern = await getPattern('blue')
+        if (pattern) {
+          context2D.strokeStyle = pattern
+        }
         
         setContext2D(context2D)
       }
     }
-  }, [canvasRef])
+  }
 
   const onMouseDown = () => {
     if (!canvasRef?.current || !context2D) {
