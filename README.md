@@ -20,3 +20,5 @@ GitHub 开源项目 Paint Board 创意画笔实现源码
 + 多线连接: multiLine
 + 网状画笔: reticulate
 + 多点连接: multiPoint
++ 波浪曲线: wiggle
++ 荆棘: thorn
