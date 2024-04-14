@@ -1,14 +1,45 @@
 import { useEffect, useRef, useState, MouseEvent } from 'react'
 import './index.css'
 
+interface Point {
+  x: number
+  y: number
+}
+
 let isMouseDown = false
-let movePoint: { x: number, y: number } | null = null
+let moveDate = 0
+let lastPoints: Point[] = []
+
+const getRandomColor = () => {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgba(${r}, ${g}, ${b}, 1)`
+}
 
 const getMousePoint = (x: number, y: number) => {
   return {
-    x: x - (window.innerWidth - 500) / 2,
-    y: y - (window.innerHeight - 500) / 2
+    x: x - (window.innerWidth - 700) / 2,
+    y: y - (window.innerHeight - 700) / 2
   }
+}
+
+const generateRandomCoordinates = (
+  centerX: number,
+  centerY: number,
+  size: number,
+  count: number
+) => {
+  const halfSize = size / 2
+  const points = []
+
+  for (let i = 0; i < count; i++) {
+    const randomX = Math.floor(centerX - halfSize + Math.random() * size)
+    const randomY = Math.floor(centerY - halfSize + Math.random() * size)
+    points.push({ x: randomX, y: randomY })
+  }
+
+  return points
 }
 
 function PaintBoard() {
@@ -19,10 +50,9 @@ function PaintBoard() {
     if (canvasRef?.current) {
       const context2D = canvasRef?.current.getContext('2d')
       if (context2D) {
-        context2D.lineCap = 'round'
-        context2D.lineJoin = 'round'
-        context2D.lineWidth = 10
-        
+        context2D.fillStyle = '#000000';
+        context2D.strokeStyle = '#000000';
+        context2D.lineWidth = 1;
         setContext2D(context2D)
       }
     }
@@ -39,17 +69,48 @@ function PaintBoard() {
     if (!canvasRef?.current || !context2D) {
       return
     }
+
+    const now = new Date().getTime()
+    if (now - moveDate < 50) {
+      return
+    }
+    moveDate = now
+
     if (isMouseDown) {
       const { clientX, clientY } = event
       const point = getMousePoint(clientX, clientY)
-      if (movePoint) {
-        context2D.beginPath()
-        context2D.moveTo(movePoint.x, movePoint.y)
-        context2D.lineTo(point.x, point.y)
-        context2D.stroke()
-      }
-      movePoint = point
+      const points = generateRandomCoordinates(point.x, point.y, 50, 3)
+      draw(points)
+      lastPoints = points
     }
+  }
+
+  const draw = (points: Point[]) => {
+    if (!context2D) {
+      return
+    }
+
+    if (lastPoints.length) {
+      lastPoints.forEach(({ x, y }, index) => {
+        context2D.beginPath();
+        context2D.save();
+        context2D.globalCompositeOperation = "destination-over";
+        context2D.strokeStyle = getRandomColor();
+        context2D.moveTo(x, y);
+        context2D.lineTo(points[index].x, points[index].y);
+        context2D.stroke();
+        context2D.restore();
+      })
+    }
+
+    points.map((curPoint) => {
+      context2D.beginPath();
+      context2D.save();
+      context2D.fillStyle = getRandomColor();
+      context2D.arc(curPoint.x, curPoint.y, 7, 0, 2 * Math.PI, false);
+      context2D.fill();
+      context2D.restore();
+    })
   }
 
   const onMouseUp = () => {
@@ -57,15 +118,16 @@ function PaintBoard() {
       return
     }
     isMouseDown = false
-    movePoint = null
+    moveDate = 0
+    lastPoints = []
   }
 
   return (
     <div className='container'>
       <canvas
         ref={canvasRef}
-        width={500}
-        height={500}
+        width={700}
+        height={700}
         className="paint-board"
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
